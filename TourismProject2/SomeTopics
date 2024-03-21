@@ -1,0 +1,6 @@
+ResponseEntity represents the whole HTTP response: status code, headers, and body.
+
+@ModelAttribute is an annotation that binds a method parameter or method return value to a named model attribute, and then exposes it to a web view.
+
+
+Remember that Angular and Spring are separate applications running on different servers, so they communicate through HTTP requests. The @ModelAttribute annotation is used for Spring MVC form binding, and it's not directly applicable to Angular frontend designs. In Angular, you primarily work with JSON data and send/receive it through HTTP requests.

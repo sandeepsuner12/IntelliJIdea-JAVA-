@@ -1,0 +1,195 @@
+Number of lift = 2
+Floors = {G->0,1,2,3,4,5,6,7,8,9}
+Both the lifts are operated with same panel
+
+Lift can
+    * Move Up
+    * Move Down
+    * Stop
+    * Speed up
+    * Speed Down
+    and while lift is Stop
+        * Open door
+        * close door
+
+Lift has Sensors that can sense
+    * is door open?
+    * is door closed?
+    * is lift empty ?
+    * is lift over weight / full?
+    * Current floor
+    //* Current Position and task assigned to lift operated with same panel
+
+ User can press button on lift or panel
+
+    While outside of lift user can press following buttons on panel
+        * request to go up
+        * request to go down
+     While inside of lift user can press following button on lift's panel
+        * open door
+        * close door
+        * request floor
+
+________________________________________________________________________________________________________________
+
+Class Lift
+
+    char currentFloor  //{0->G,1,2,3,4,5,6,7,8,9}
+    boolean taskAssigned
+    String doorStatus  //closed / open
+    String Status     //empty/OverWeight/hasPassengers(not empty)
+
+END CLASS
+
+//for 2 Lifts create 2 objects
+
+Lift Object lift1 , lift2
+
+Method rest(Lift lift)
+    *********listenFloor()
+
+    if lift.currentFloor != G
+        goDown(lift , G)
+    END IF
+END METHOD
+
+Method listenFloors(int requests[])
+
+    take all (Up / Down) requests in array and use suitable (according to needs) algorithm  to assign going Up and down request to lifts
+
+    While(requests.length()!= 0)
+        Algo(int requests[]) -----> requestedFloor = requests[i]
+
+          if !Lift1.taskAssigned
+                if(Lift1 is moving) ----> Stop Lift1
+                END IF
+                Lift1.taskAssigned = True
+                if(requestedFloor > lift1.currentFloor)
+                    goUp(lift1 , requestedFloor)
+                END IF
+                else if
+                    goDown(lift1 , requestedFloor)
+                END ELSE IF
+         END if
+         else if !Lift2.taskAssigned
+                 if(Lift2 is moving) ----> Stop Lift2
+                 END IF
+                  Lift2.taskAssigned = True
+                  if(requestedFloor > lift2.currentFloor)
+                      goUp(lift2 , requestedFloor)
+                  END IF
+                  else if
+                    goDown(lift1 , requestedFloor)
+                  END ELSE IF
+        END else if
+        *************************
+    END WHILE
+
+END Method
+
+Method takeFloorRequests(Lift lift ,int floorRequests[]);
+    while(floorRequests.length()!= 0)
+        Algo ---->floor //take all floor requests and gives one floor value which is to be served
+        if(floor > lift.currentFloor)
+            goUp(lift , floor)
+        END IF
+        else if
+            goDown(lift , floor)
+        END ELSE IF
+    END WHILE
+
+
+END METHOD
+
+Method goUp(Lift lift , requestedFloor)
+    if requestedFloor - currentFloor > 3
+        SpeedUp(lift);
+    END If
+
+    While currentFloor != requestedFloor
+
+        if(currentFloor == requestedFloor-1 && Speed is up)
+            slowDown(lift)
+        END IF
+        currentFloor ++;
+    END WHILE
+
+    Stop(lift)
+    remove current floor value from floorRequests[] and requests[]
+    openDoor(lift) ---> lift.doorStatus = "open"
+
+    listen for -------> doorOpen or doorClose  requests
+
+    wait for 10 sec
+
+    While(lift.status == overWeight)
+        wait and display WARNING
+    END While
+
+    if (lift.status!=overWeight)
+        lift.doorClosed()
+    END IF
+    else if
+        go to While loop(line 125) again
+    END ELSE IF
+
+    if(floorRequests.length != 0 )
+        takeFloorRequests(lift , floorRequests);
+    END IF
+    else if
+        lift.taskAssigned== false
+        rest(lift)
+
+END METHOD
+
+Method goDown(Lift lift , requestedFloor)
+    if currentFloor - requestedFloor > 3
+        SpeedUp(lift);
+    END If
+
+    While currentFloor != requestedFloor
+
+        if(currentFloor == requestedFloor+1 && Speed is up)
+            slowDown(lift)
+        END IF
+        currentFloor --;
+    END WHILE
+
+    Stop(lift)
+    openDoor(lift) ---> lift.doorStatus = "open"
+    remove current floor value from floorRequests[] and requests[]
+
+    listen for -------> doorOpen or doorClose  requests
+
+    wait for 10 sec
+
+    While(lift.status == overWeight)
+        wait and display WARNING
+    END While
+
+    if (lift.status!=overWeight)
+        lift.doorClosed()
+    END IF
+    else if
+        go to While loop(line 166) again
+    END ELSE IF
+
+    if(floorRequests.length != 0)
+        takeFloorRequests(lift , floorRequests);
+    END IF
+    else if
+        lift.taskAssigned== false
+        rest(lift)
+
+END METHOD
+
+
+
+
+
+
+
+
+
+
+
